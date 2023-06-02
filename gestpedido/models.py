@@ -13,6 +13,10 @@ class Articulos(models.Model):
     seccion=models.CharField(max_length=20)
     precio=models.IntegerField()
     
+    
+    #def __str__(self): #Se usa para convertir datos legibles de consulta de BD
+     #   return 'El nombre es %s la seccion es %s y el precio es %s' %(self.nombre, self.seccion, self.precio) 
+    
 class Pedidos(models.Model):
     numero=models.IntegerField()
     fecha=models.DateField()
