@@ -3,6 +3,8 @@ from django.http import HttpResponse
 from gestpedido.models import Articulos
 from django.core.mail import send_mail
 from django.conf import settings
+from gestpedido.forms import FormularioContacto
+
 # Create your views here.
 
 
@@ -34,19 +36,38 @@ def contacto(request):
     
     if request.method=="POST":
         
-        subject=request.POST["asunto"]
         
-        message=request.POST["mensaje"] + " " + request.POST["email"]
+        miFormulario=FormularioContacto(request.POST)
         
-        email_from=settings.EMAIL_HOST_USER
+        if miFormulario.is_valid():
+            
+            infForm=miFormulario.cleaned_data
+            
+            send_mail(infForm['asunto'], infForm['mensaje'], infForm.get('email',''),['programacionfronts@gmail.com'],)
+            
+            return render(request,"gracias.html")
         
-        recipient_list=["programacionfronts@gmail.com"]
+    else:
         
-        send_mail(subject, message, email_from, recipient_list)
+        miFormulario=FormularioContacto()
+    
+    
+    return render(request,"formulario_contacto.html",{"form":miFormulario})
+   # if request.method=="POST": "se comenta todo la funcion ya que usaremos api forms"
         
-        return render(request, "gracias.html")
+    #    subject=request.POST["asunto"]
+        
+     #   message=request.POST["mensaje"] + " " + request.POST["email"]
+        
+     #   email_from=settings.EMAIL_HOST_USER
+        
+     #   recipient_list=["programacionfronts@gmail.com"]
+        
+    #    send_mail(subject, message, email_from, recipient_list)
+        
+    #    return render(request, "gracias.html")
         
     
-    return render(request, "contacto.html")
+   # return render(request, "contacto.html")
 
 
